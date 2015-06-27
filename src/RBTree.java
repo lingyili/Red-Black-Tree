@@ -17,7 +17,9 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             this.right = null;
             this.isBlack = false;
         }
-
+        public boolean getColor() {
+            return isBlack;
+        }
     }
     public RBTree() {
         root = null;
