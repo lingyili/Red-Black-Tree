@@ -1,29 +1,19 @@
 import java.util.*;
 
 /**
- * Created by lingyi on 6/27/15.
+ *
  */
 public class RBTree <E extends Comparable> implements BSTree<E> {
-    RBNode root;
-    int count;
+    private RBNode root;
+    private int count;
     private class RBNode {
         E data;
-        RBNode left;
-        RBNode right;
+        RBNode left,right,parent;
         boolean isBlack;
         public RBNode(E data) {
             this.data = data;
-            this.left = null;
-            this.right = null;
             this.isBlack = false;
         }
-        public boolean getColor() {
-            return isBlack;
-        }
-    }
-    public RBTree() {
-        root = null;
-        count = 0;
     }
     /**
      * Adds the item to the tree.  Duplicate items and null items should not be added. O(log n)
@@ -32,13 +22,121 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * @return true if item added, false if it was not
      */
     public boolean add(E item) {
-        if (isEmpty()) {
-            RBNode newNode = new RBNode(item);
-            newNode.isBlack = true;
-            root = newNode;
+        if(item == null || contains(item)) {return  false;}
+        boolean toReturn;
+        RBNode toAdd = new RBNode(item);
+        if(root == null) {
+            root = toAdd;
+            root.isBlack = true;
+            count++;
+            return true;
+        } else {
+            toReturn =  add(toAdd, root);
         }
-        return false;
+        if(toReturn){
+            int situation = addCase(toAdd);
+            while(situation != 1 && situation != 2 ){
+                toAdd = rebanlance(situation,toAdd);
+                situation = addCase(toAdd);
+            }
+        }
+        return toReturn;
     }
+
+    private boolean add(RBNode toAdd, RBNode root){
+        if (toAdd.data.compareTo(root.data) == 0){return  false;}
+        if (toAdd.data.compareTo(root.data) < 0){
+            if(root.left == null){
+                root.left = toAdd;
+                toAdd.parent = root;
+                count++;
+                return  true;
+            } else {
+                return add(toAdd, root.left);
+            }
+        }else {
+            if(root.right == null){
+                root.right = toAdd;
+                toAdd.parent = root;
+                count++;
+                return  true;
+            } else {
+                return add(toAdd, root.right);
+            }
+        }
+    }
+    private int addCase(RBNode toAdd){
+        if(toAdd == root){return 1;}
+        if(toAdd.parent.isBlack){return 2;}
+        //parent is red
+        boolean parentIsRight = false;
+         if(toAdd.parent.parent.right != null && toAdd.parent.parent.right == toAdd.parent){
+             parentIsRight = true;
+        }
+
+        //uncle is red too
+        if(parentIsRight){
+            if(  toAdd.parent.right != null && !toAdd.parent.left.isBlack)return 3;
+        } else if(toAdd.parent.right != null && !toAdd.parent.right.isBlack){
+            return 3;
+        }
+
+        boolean toAddIsRight = false;
+        if(toAdd.parent.right != null && toAdd.parent.right == toAdd.parent){
+            toAddIsRight = true;
+        }
+        //parent:red, uncle:black, toAdd is in right of parent
+        if((toAdd.parent.left == null || toAdd.parent.left.isBlack ) && toAddIsRight) return 4;
+        //parent:red, uncle:black, toAdd is in left of parent
+        return 5;
+    }
+
+    private RBNode rebanlance(int situation, RBNode toAdd){
+        boolean parentIsRight = false;
+        if(toAdd.parent.parent.right != null && toAdd.parent.parent.right == toAdd.parent){
+            parentIsRight = true;
+        }
+
+        if(situation == 3){
+            toAdd.parent.isBlack = true;
+            toAdd.parent.parent.isBlack = false;
+            //make uncle black
+            if(parentIsRight && toAdd.parent.left!= null ){
+                toAdd.parent.left.isBlack = true;
+            } else{
+                if(toAdd.parent.right!= null) {toAdd.parent.right.isBlack = true;}
+            }
+            return toAdd.parent.parent;
+        }
+        if(situation == 4){
+            return rotateLeft(toAdd);
+
+        }
+        //if(situation == 5)
+        toAdd.parent.isBlack = true;
+        toAdd.parent.parent.isBlack = false;
+        return rotateRight(toAdd.parent);
+    }
+
+    private RBNode rotateLeft(RBNode oob){
+        RBNode newRoot = oob.right;
+        oob.right = newRoot.left;
+        newRoot.left = oob;
+        if(oob == root) root = newRoot;
+        return newRoot;
+    }
+
+    private RBNode rotateRight(RBNode oob){
+        RBNode newRoot = oob.left;
+        oob.left = newRoot.right;
+        newRoot.right = oob;
+        if(oob == root) root = newRoot;
+        return newRoot;
+    }
+
+
+
+
 
     /**
      * returns the maximum element held in the tree.  null if tree is empty. O(log n)
@@ -147,16 +245,12 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      */
     public List<E> getInOrder() {
         List<E> list = new ArrayList<>();
-        if (root == null) {
-            return list;
-        }
+        if (root == null) {return list;}
         inOrderRecursive(root,list);
         return list;
     }
     private void inOrderRecursive(RBNode node, List<E> list) {
-        if (node == null) {
-            return;
-        }
+        if (node == null) {return;}
         inOrderRecursive(node.left, list);
         list.add(node.data);
         inOrderRecursive(node.right, list);
@@ -169,16 +263,12 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      */
     public List<E> getPostOrder() {
         List<E> list = new ArrayList<>();
-        if (isEmpty()) {
-            return list;
-        }
+        if (isEmpty()) {return list;}
         postOrderRecursive(root, list);
         return list;
     }
     private void postOrderRecursive(RBNode node, List<E> list) {
-        if (node == null) {
-            return;
-        }
+        if (node == null) {return;}
         postOrderRecursive(node.left, list);
         postOrderRecursive(node.right, list);
         list.add((E) node.data);
@@ -188,29 +278,19 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      *
      * @return a list of the data in level-order traversal order
      */
-    public List<E> getLevelOrder() {
-        Queue<RBNode> nodequeue = new ArrayDeque<>();
-        List<E> list = new ArrayList<>();
-        if (root == null) {
-            return list;
+    public List<E> getLevelOrder(){
+        ArrayList<E> levelOrder = new ArrayList<>();
+        if(root == null){return levelOrder;}
+        Queue<RBNode> visited = new ArrayDeque<>();
+        visited.add(root);
+        RBNode current;
+        while(!visited.isEmpty()){
+            current = visited.poll();
+            if(current.left != null) {visited.add(current.left);}
+            if(current.right != null) {visited.add(current.right);}
+            levelOrder.add(current.data);
         }
-        if (root != null)
-            nodequeue.add(root);
-        list.add(root.data);
-        while (!nodequeue.isEmpty()) {
-            RBNode next = nodequeue.remove();
-            if (next.left != null)
-            {
-                nodequeue.add(next.left);
-                list.add(next.left.data);
-            }
-            if (next.right != null)
-            {
-                nodequeue.add(next.right);
-                list.add(next.right.data);
-            }
-        }
-        return list;
+        return levelOrder;
     }
 
     /**
