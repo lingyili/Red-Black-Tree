@@ -1,5 +1,4 @@
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by lingyi on 6/27/15.
@@ -16,7 +15,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             this.data = data;
             this.left = null;
             this.right = null;
-            this.isBlack = true;
+            this.isBlack = false;
         }
 
     }
@@ -31,6 +30,11 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * @return true if item added, false if it was not
      */
     public boolean add(E item) {
+        if (isEmpty()) {
+            RBNode newNode = new RBNode(item);
+            newNode.isBlack = true;
+            root = newNode;
+        }
         return false;
     }
 
@@ -40,7 +44,15 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * @return maximum item or null if empty
      */
     public E max() {
-        return null;
+        if (isEmpty()) {
+            return null;
+        } else {
+            RBNode currentNode = root;
+            while (currentNode.right != null) {
+                currentNode = currentNode.right;
+            }
+            return currentNode.data;
+        }
     }
 
     /**
@@ -67,7 +79,15 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * @return the minimum element in the tree or null if empty
      */
     public E min() {
-        return null;
+        if (isEmpty()) {
+            return null;
+        } else {
+            RBNode currentNode = root;
+            while (currentNode.left != null) {
+                currentNode = currentNode.left;
+            }
+            return currentNode.data;
+        }
     }
 
     /**
@@ -77,6 +97,26 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * @return true if item is in tree, false otherwise
      */
     public boolean contains(E item) {
+        if (item == null) {
+            return false;
+        }
+        if (isEmpty()) {
+            return false;
+        } else {
+            return ifContains(root, item);
+        }
+    }
+    private boolean ifContains(RBNode currentNode, E item) {
+        if (currentNode != null) {
+            int compare = item.compareTo(currentNode.data);
+            if (compare == 0) {
+                return true;
+            } else if (compare < 0) {
+                return ifContains(currentNode.left, item);
+            } else {
+                return ifContains(currentNode.right, item);
+            }
+        }
         return false;
     }
 
@@ -95,7 +135,29 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * iterator is based on an in-order traversal
      */
     public Iterator<E> iterator() {
-        return null;
+        List<E> list = getInOrder();
+        return list.iterator();
+    }
+
+    /**
+     *
+     * @return a list of the data in order traversal order
+     */
+    public List<E> getInOrder() {
+        List<E> list = new ArrayList<>();
+        if (root == null) {
+            return list;
+        }
+        inOrderRecursive(root,list);
+        return list;
+    }
+    private void inOrderRecursive(RBNode node, List<E> list) {
+        if (node == null) {
+            return;
+        }
+        inOrderRecursive(node.left, list);
+        list.add(node.data);
+        inOrderRecursive(node.right, list);
     }
 
     /**
@@ -104,16 +166,49 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * @return a list of the data in post-order traversal order
      */
     public List<E> getPostOrder() {
-        return null;
+        List<E> list = new ArrayList<>();
+        if (isEmpty()) {
+            return list;
+        }
+        postOrderRecursive(root, list);
+        return list;
     }
-
+    private void postOrderRecursive(RBNode node, List<E> list) {
+        if (node == null) {
+            return;
+        }
+        postOrderRecursive(node.left, list);
+        postOrderRecursive(node.right, list);
+        list.add((E) node.data);
+    }
     /**
      * O(n)
      *
      * @return a list of the data in level-order traversal order
      */
     public List<E> getLevelOrder() {
-        return null;
+        Queue<RBNode> nodequeue = new ArrayDeque<>();
+        List<E> list = new ArrayList<>();
+        if (root == null) {
+            return list;
+        }
+        if (root != null)
+            nodequeue.add(root);
+        list.add(root.data);
+        while (!nodequeue.isEmpty()) {
+            RBNode next = nodequeue.remove();
+            if (next.left != null)
+            {
+                nodequeue.add(next.left);
+                list.add(next.left.data);
+            }
+            if (next.right != null)
+            {
+                nodequeue.add(next.right);
+                list.add(next.right.data);
+            }
+        }
+        return list;
     }
 
     /**
@@ -122,7 +217,20 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * @return a list of the data in pre-order traversal order
      */
     public List<E> getPreOrder() {
-        return null;
+        List<E> list = new ArrayList<>();
+        if (root == null) {
+            return list;
+        }
+        preOrderRecursive(root, list);
+        return list;
+    }
+    private void preOrderRecursive(RBNode node, List<E> list) {
+        if (node == null) {
+            return;
+        }
+        list.add(node.data);
+        preOrderRecursive(node.left,list);
+        preOrderRecursive(node.right,list);
     }
 
     /**
