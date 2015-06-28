@@ -36,7 +36,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         if(toReturn){
             int situation = addCase(toAdd);
             while(situation != 1 && situation != 2 ){
-                toAdd = rebanlance(situation,toAdd);
+                toAdd = fixAdd(situation, toAdd);
                 situation = addCase(toAdd);
             }
         }
@@ -76,7 +76,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
 
         //uncle is red too
         if(parentIsRight){
-            if(  toAdd.parent.right != null && !toAdd.parent.left.isBlack)return 3;
+            if(  toAdd.parent.left != null && !toAdd.parent.left.isBlack)return 3;
         } else if(toAdd.parent.right != null && !toAdd.parent.right.isBlack){
             return 3;
         }
@@ -91,7 +91,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         return 5;
     }
 
-    private RBNode rebanlance(int situation, RBNode toAdd){
+    private RBNode fixAdd(int situation, RBNode toAdd){
         boolean parentIsRight = false;
         if(toAdd.parent.parent.right != null && toAdd.parent.parent.right == toAdd.parent){
             parentIsRight = true;
@@ -144,15 +144,10 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * @return maximum item or null if empty
      */
     public E max() {
-        if (isEmpty()) {
-            return null;
-        } else {
-            RBNode currentNode = root;
-            while (currentNode.right != null) {
-                currentNode = currentNode.right;
-            }
-            return currentNode.data;
-        }
+        if (isEmpty()) {return null;}
+        RBNode currentNode = root;
+        while (currentNode.right != null) {currentNode = currentNode.right;}
+        return currentNode.data;
     }
 
     /**
@@ -226,9 +221,33 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      * @param item the item to remove
      * @return true if item removed, false if item not found
      */
-    public boolean remove(E item) {
-        return false;
+    public boolean remove(E item){
+        if(item == null) return false;
+        boolean result = contains(item);
+        root = removeRecurse(root, item);
+        if(result)count--;
+        return result;
     }
+
+    private RBNode removeRecurse( RBNode node, E item){
+        if(node == null) return null;
+        if(item.compareTo(node.data) < 0){
+            node.left = removeRecurse(node.left, item);
+        } else if (item.compareTo(node.data) > 0){
+            node.right = removeRecurse(node.right,item);
+        }else if(node.right != null && node.left != null){//toRemove has two subtrees
+            node.data = max(node.left);
+            node.right = removeRecurse(node.right, node.data);//remove the succ node
+        } else{//one subtree or leaf node
+            node = (node.left != null) ? node.left : node.right;
+        }
+        return fixRemove(node);
+    }
+    private  E max(RBNode current){
+        if (current.right == null){return  current.data;}
+        return max(current.right);
+    }
+    private RBNode fixRemove(RBNode node){return null;}
 
     /**
      * returns an iterator over this collection
@@ -300,16 +319,12 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
      */
     public List<E> getPreOrder() {
         List<E> list = new ArrayList<>();
-        if (root == null) {
-            return list;
-        }
+        if (root == null) {return list;}
         preOrderRecursive(root, list);
         return list;
     }
     private void preOrderRecursive(RBNode node, List<E> list) {
-        if (node == null) {
-            return;
-        }
+        if (node == null) {return;}
         list.add(node.data);
         preOrderRecursive(node.left,list);
         preOrderRecursive(node.right,list);
