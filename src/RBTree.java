@@ -39,10 +39,12 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             while(situation != 1 && situation != 2 ){
                 System.out.println("toAdd item: "+toAdd.data+" The situation is: "+ situation);
                 toAdd = fixAdd(situation, toAdd);
-                root.isBlack = true;
+
                 situation = addCase(toAdd);
             }
         }
+        root.isBlack = true;
+        showInfo(root);
         return toReturn;
     }
 
@@ -119,7 +121,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             selfIsRight = true;
         }
         if(situation == 4){
-            if(!selfIsRight){return rotateLeft(toAdd.parent);}
+            if(selfIsRight){return rotateLeft(toAdd.parent);}
             return rotateRight(toAdd.parent);
 
         }
@@ -360,5 +362,9 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
     }
     public boolean getRoot() {
         return root.isBlack;
+    }
+
+    public void showInfo(RBNode toShow){
+        System.out.println("Data: "+ toShow.data+" black: "+toShow.isBlack);
     }
 }
