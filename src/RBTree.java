@@ -39,7 +39,6 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             while(situation != 1 && situation != 2 ){
                 System.out.println("toAdd item: "+toAdd.data+" The situation is: "+ situation);
                 toAdd = fixAdd(situation, toAdd);
-
                 situation = addCase(toAdd);
             }
         }
@@ -72,7 +71,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         }
     }
     private int addCase(RBNode toAdd){
-        if(toAdd == root){return 1;}
+        if(toAdd == root || toAdd.isBlack){return 1;}
         if(toAdd.parent.isBlack){return 2;}
         //parent is red
         boolean parentIsRight = false;
@@ -94,7 +93,10 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             toAddIsRight = true;
         }
         //parent:red, uncle:black, toAdd is in right of parent
-        if((toAdd.parent.left == null || toAdd.parent.left.isBlack ) && toAddIsRight) {return 4;}
+        if(((toAdd.parent.parent.left == null || toAdd.parent.parent.left.isBlack ) && toAddIsRight)
+                ||((toAdd.parent.parent.right == null || toAdd.parent.parent.right.isBlack ) && toAddIsRight)) {
+            return 4;
+        }
         //parent:red, uncle:black, toAdd is in left of parent
         return 5;
     }
@@ -128,9 +130,12 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         //if(situation == 5)
         toAdd.parent.isBlack = true;
         toAdd.parent.parent.isBlack = false;
-        if(!parentIsRight){return rotateRight(toAdd.parent.parent);}
-        System.out.println("About to rotateLeft: "+ toAdd.data);
-        return rotateLeft(toAdd.parent.parent);
+        if(!parentIsRight){
+            rotateRight(toAdd.parent.parent);
+        }else{
+            rotateLeft(toAdd.parent.parent);
+        }
+        return toAdd;
     }
 
     private RBNode rotateLeft(RBNode oob){
@@ -138,6 +143,17 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         RBNode newRoot = oob.right;
         oob.right = newRoot.left;
         newRoot.left = oob;
+        if(oob.parent!= null){
+            boolean oobIsRight = false;
+            if(oob.parent.right == oob){
+                oobIsRight = true;
+            }
+            if(oobIsRight){
+                oob.parent.right = newRoot;
+            }else {
+                oob.parent.left = newRoot;
+            }
+        }
         newRoot.parent = oob.parent;
         oob.parent = newRoot;
         if(oob == root) {root = newRoot;}
@@ -149,6 +165,17 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         RBNode newRoot = oob.left;
         oob.left = newRoot.right;
         newRoot.right = oob;
+        if(oob.parent!= null){
+            boolean oobIsRight = false;
+            if(oob.parent.right == oob){
+                oobIsRight = true;
+            }
+            if(oobIsRight){
+                oob.parent.right = newRoot;
+            }else {
+                oob.parent.left = newRoot;
+            }
+        }
         newRoot.parent = oob.parent;
         oob.parent = newRoot;
         if(oob == root) {root = newRoot;}
@@ -365,6 +392,6 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
     }
 
     public void showInfo(RBNode toShow){
-        System.out.println("Data: "+ toShow.data+" black: "+toShow.isBlack);
+        System.out.println("Root: "+ toShow.data+" black: "+toShow.isBlack);
     }
 }
