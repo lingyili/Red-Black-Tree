@@ -350,6 +350,21 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         return levelOrder;
     }
 
+    public List<Boolean> getLevelOrderColor(){
+        ArrayList<Boolean> levelOrder = new ArrayList<>();
+        if(root == null){return levelOrder;}
+        Queue<RBNode> visited = new ArrayDeque<>();
+        visited.add(root);
+        RBNode current;
+        while(!visited.isEmpty()){
+            current = visited.poll();
+            if(current.left != null) {visited.add(current.left);}
+            if(current.right != null) {visited.add(current.right);}
+            levelOrder.add(current.isBlack);
+        }
+        return levelOrder;
+    }
+
     /**
      * O(n)
      *

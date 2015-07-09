@@ -11,9 +11,10 @@ public class RBTreeTest {
 	RBTree<Integer> tree;
 	int[] first = {54,23,76,45,98,12,43,25,86,73};
 	int[] firstLevelOrder = {54,23,86,12,43,76,98,25,45,73};
-	int[] firstLevelOrder2 = {54,23,76,12,43,98,25,45};
-	int[] firstLevelOrder3 = {54,23,86,12,43,76,98,25,45};
-
+    Boolean[] firstColor = {true,false,false,true,true,true,true,false,false,false};
+    int[] second = {190, 43, 23, 76, 58, 93, 68, 34, 66, 91};
+    int[] secondLevelOrder = {43,23,76,34,66,93,58,68,91,190};
+    Boolean[] secondColor = {true,true,false,false,true,true,false,false,false,false};
 	@Before
 	public void setup() {
 		tree = new RBTree<Integer>();
@@ -43,15 +44,37 @@ public class RBTreeTest {
 			boolean flag = tree.add(first[i]);
 			assertTrue(flag);
 		}
-		//assertEquals(first.length, tree.size());
-		//assertFalse(tree.isEmpty());
+		assertEquals(first.length, tree.size());
+		assertFalse(tree.isEmpty());
 
 		//test the structure using the traversals
 		List<Integer> list = tree.getLevelOrder();
+        List<Boolean> list2 = tree.getLevelOrderColor();
 		for (int i = 0; i < firstLevelOrder.length; ++ i) {
 			assertEquals((int)firstLevelOrder[i], (int)list.get(i));
+            assertEquals(firstColor[i], list2.get(i));
 		}
 
 	}
+
+    @Test
+    public void testAddManySingle2() {
+        //this will cause two single rotations, one in each direction
+        for (int i = 0; i < secondLevelOrder.length; ++i) {
+            boolean flag = tree.add(second[i]);
+            assertTrue(flag);
+        }
+        assertEquals(second.length, tree.size());
+        assertFalse(tree.isEmpty());
+
+        //test the structure using the traversals
+        List<Integer> list = tree.getLevelOrder();
+        List<Boolean> list2 = tree.getLevelOrderColor();
+        for (int i = 0; i < secondLevelOrder.length; ++ i) {
+            assertEquals((int)secondLevelOrder[i], (int)list.get(i));
+            assertEquals(secondColor[i], list2.get(i));
+        }
+
+    }
 }
 
