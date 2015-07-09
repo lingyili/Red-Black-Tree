@@ -12,6 +12,7 @@ public class RBTreeTest {
 	int[] first = {54,23,76,45,98,12,43,25,86,73};
 	int[] firstLevelOrder = {54,23,86,12,43,76,98,25,45,73};
 	int[] firstLevelOrder2 = {54,23,76,12,43,98,25,45};
+	int[] firstLevelOrder3 = {54,23,86,12,43,76,98,25,45};
 
 	@Before
 	public void setup() {
@@ -28,7 +29,7 @@ public class RBTreeTest {
 		assertFalse(tree.isEmpty());
 	}
 	@Test
-	public void testAddManyNoRotate() {
+	public void testAddManyWithRotate() {
 		for (int i = 0; i < first.length ; ++i) {
 			assertTrue(tree.add(first[i]));
 		}

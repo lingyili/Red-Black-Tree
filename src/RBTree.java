@@ -34,13 +34,8 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             toReturn =  add(toAdd, root);
         }
         if(toReturn){
-            System.out.println(toAdd.data+" is added");
-            int situation = addCase(toAdd);
-            while(situation != 1 && situation != 2 ){
-                System.out.println("toAdd item: "+toAdd.data+" The situation is: "+ situation);
-                toAdd = fixAdd(situation, toAdd);
-                situation = addCase(toAdd);
-            }
+            System.out.println(toAdd.data+" is added. its parent is: "+ toAdd.parent.data);
+            fixAdd(toAdd);
         }
         root.isBlack = true;
         showInfo(root);
@@ -56,6 +51,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                 count++;
                 return  true;
             } else {
+                System.out.println("toAdd is: "+ toAdd.data+" subRoot.left is "+ subRoot.left.data);
                 return add(toAdd, subRoot.left);
             }
         }else {
@@ -70,72 +66,66 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             }
         }
     }
-    private int addCase(RBNode toAdd){
-        if(toAdd == root || toAdd.isBlack){return 1;}
-        if(toAdd.parent.isBlack){return 2;}
-        //parent is red
-        boolean parentIsRight = false;
-         if(toAdd.parent.parent.right != null && toAdd.parent.parent.right == toAdd.parent){
-             parentIsRight = true;
-        }
 
-        //uncle is red too
-        if(parentIsRight) {
-            if (toAdd.parent.parent.left != null && !toAdd.parent.parent.left.isBlack)
-            {return 3;}
 
-        } else if(toAdd.parent.parent.right != null && !toAdd.parent.parent.right.isBlack){
-            return 3;
-        }
+    private void fixAdd(RBNode toAdd){
+        RBNode parent,gparent,uncle;
+        parent = toAdd.parent;
 
-        boolean toAddIsRight = false;
-        if(toAdd.parent.right != null && toAdd.parent.right == toAdd){
-            toAddIsRight = true;
-        }
-        //parent:red, uncle:black, toAdd is in right of parent
-        if(((toAdd.parent.parent.left == null || toAdd.parent.parent.left.isBlack ) && toAddIsRight)
-                ||((toAdd.parent.parent.right == null || toAdd.parent.parent.right.isBlack ) && toAddIsRight)) {
-            return 4;
-        }
-        //parent:red, uncle:black, toAdd is in left of parent
-        return 5;
-    }
-
-    private RBNode fixAdd(int situation, RBNode toAdd){
-        boolean parentIsRight = false;
-        if(toAdd.parent.parent.right != null && toAdd.parent.parent.right == toAdd.parent){
-            parentIsRight = true;
-        }
-
-        if(situation == 3){
-            toAdd.parent.isBlack = true;
-            toAdd.parent.parent.isBlack = false;
-            //make uncle black
-            if(parentIsRight && toAdd.parent.parent.left!= null ){
-                toAdd.parent.parent.left.isBlack = true;
-            } else{
-                if(toAdd.parent.parent.right!= null) {toAdd.parent.parent.right.isBlack = true;}
+        //don't need to fix if toAdd is root or its parent is black
+        while(parent != null && !parent.isBlack){
+            boolean parentIsRight = false;
+            if(toAdd.parent.parent.right != null && toAdd.parent.parent.right == toAdd.parent){
+                parentIsRight = true;
             }
-            return toAdd.parent.parent;
-        }
-        boolean selfIsRight = false;
-        if(toAdd.parent.right != null && toAdd.parent.right == toAdd){
-            selfIsRight = true;
-        }
-        if(situation == 4){
-            if(selfIsRight){return rotateLeft(toAdd.parent);}
-            return rotateRight(toAdd.parent);
+            gparent = parent.parent;
+            if(!parentIsRight){
+                //parent is left
+                uncle = gparent.right;
+                if(uncle != null){
+                    System.out.println("uncle color is: "+ uncle.isBlack);
+                }
+                if(uncle != null && !uncle.isBlack){
+                    uncle.isBlack = true;
+                    parent.isBlack = true;
+                    gparent.isBlack = false;
+                    toAdd = gparent;
+                    continue;
+                }
 
+                if(parent.right == toAdd){
+                    rotateLeft(parent);
+                    RBNode temp;
+                    temp = toAdd;
+                    toAdd = parent;
+                    parent = temp;;
+                }
+                parent.isBlack = true;
+                gparent.isBlack = false;
+                rotateRight(gparent);
+            } else {
+                //parent is right
+                uncle = gparent.left;
+                if(uncle != null && !uncle.isBlack){
+                    uncle.isBlack = true;
+                    parent.isBlack = true;
+                    gparent.isBlack = false;
+                    toAdd = gparent;
+                    continue;
+                }
+
+                if(parent.left == toAdd){
+                    rotateRight(parent);
+                    RBNode temp;
+                    temp = toAdd;
+                    toAdd = parent;
+                    parent = temp;
+                }
+                parent.isBlack = true;
+                gparent.isBlack = false;
+                rotateLeft(gparent);
+            }
         }
-        //if(situation == 5)
-        toAdd.parent.isBlack = true;
-        toAdd.parent.parent.isBlack = false;
-        if(!parentIsRight){
-            rotateRight(toAdd.parent.parent);
-        }else{
-            rotateLeft(toAdd.parent.parent);
-        }
-        return toAdd;
     }
 
     private RBNode rotateLeft(RBNode oob){
@@ -390,6 +380,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
     public boolean getRoot() {
         return root.isBlack;
     }
+
 
     public void showInfo(RBNode toShow){
         System.out.println("Root: "+ toShow.data+" black: "+toShow.isBlack);
