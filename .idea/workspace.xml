@@ -4,7 +4,6 @@
     <list default="true" id="48fb79a1-feca-4322-a796-1b1dad205af0" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Red-Black-Tree/RBTree.class" afterPath="$PROJECT_DIR$/out/production/Red-Black-Tree/RBTree.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Red-Black-Tree/RBTreeTest.class" afterPath="$PROJECT_DIR$/out/production/Red-Black-Tree/RBTreeTest.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/RBTree.java" afterPath="$PROJECT_DIR$/src/RBTree.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Red-Black-Tree.iws" />
@@ -31,7 +30,7 @@
       <file leaf-file-name="RBTree.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/RBTree.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.232436">
+            <state vertical-scroll-proportion="1.8639523">
               <caret line="310" column="43" selection-start-line="310" selection-start-column="43" selection-end-line="310" selection-end-column="43" />
               <folding />
             </state>
@@ -540,7 +539,7 @@
       <workItem from="1436415281928" duration="996000" />
       <workItem from="1436494159478" duration="3875000" />
       <workItem from="1436498650477" duration="640000" />
-      <workItem from="1436555523399" duration="4946000" />
+      <workItem from="1436555523399" duration="4978000" />
     </task>
     <task id="LOCAL-00001" summary="Finish add method">
       <created>1436413350792</created>
@@ -554,24 +553,31 @@
       <option name="project" value="LOCAL" />
       <updated>1436416202852</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Finish Remove method">
+      <created>1436562275582</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1436562275582</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43905000" />
+    <option name="totallyTimeSpent" value="43937000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-13" y="0" width="1472" height="1816" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32868904" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32971245" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32971245" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32929164" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32971245" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26387095" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -586,7 +592,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3994927" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32868904" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37017658" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -606,7 +611,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Finish add method" />
     <MESSAGE value="Finish add method junit test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finish add method junit test" />
+    <MESSAGE value="Finish Remove method" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finish Remove method" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -888,7 +894,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/RBTree.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.232436">
+        <state vertical-scroll-proportion="1.8639523">
           <caret line="310" column="43" selection-start-line="310" selection-start-column="43" selection-end-line="310" selection-end-column="43" />
           <folding />
         </state>
