@@ -306,40 +306,48 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         } else if (!contains(item)) {
             return false;
         }
-        RBNode toFix;
+        count--;
         RBNode toDelete = find(item);
-        toFix =  removeHelper(toDelete);
-        fixRemove(toFix);
+        removeHelper(toDelete);
         return (toDelete != null);
     }
 
     private  RBNode removeHelper(RBNode toRemove){
         RBNode toDelete;
+        //toFix is the child node
         RBNode toFix;
-        if(toRemove.left == null ||toRemove.right == null ){
+        if(toRemove.left == null || toRemove.right == null ){
             toDelete = toRemove;
         } else {
-            toDelete = min(toRemove.right);
-        }
-        if(toDelete.parent == null){
-            root = toDelete;
+            //two subtrees, we need successor
+            toDelete = max(toRemove.left);
         }
         if(toDelete.left != null){
             toFix = toDelete.left;
         } else {
             toFix = toDelete.right;
         }
-        toFix.parent = toDelete.parent;
-        if(toDelete.parent.left == toDelete){
-            toDelete.parent.left = toFix;
-        } else{
-            toDelete.parent.right = toFix;
+        if(toFix!= null){
+            toFix.parent = toDelete.parent;
         }
+        if(toDelete.parent == null){
+            root = toFix;
+        } else {
+            if( toDelete.parent.left == toDelete){
+                toDelete.parent.left = toFix;
+            } else{
+                toDelete.parent.right = toFix;
+            }
+        }
+        //set the parent pointer
         if(toRemove != toDelete){
             toRemove.isBlack = toDelete.isBlack;
             toRemove.data = toDelete.data;
         }
-        return toFix;
+        if(toDelete.isBlack){
+            fixRemove(toFix);
+        }
+        return toDelete;
     }
     //find the min in the subtree of current
 
@@ -350,15 +358,16 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
 
     private void fixRemove(RBNode node) {
         RBNode brother;
-        while ((node == null || node.isBlack) && (node != root )) {
+        while ((node != null && node.isBlack) && (node != root )) {
             //Case 1,2 return
             if(!selfIsRight(node)){
                 brother = node.parent.right;
                 if(brother != null && !brother.isBlack){
                     //Case 3:brother is red
-                    node.parent.isBlack = false;
                     brother.isBlack = true;
+                    node.parent.isBlack = false;
                     rotateLeft(node.parent);
+                    brother = node.parent.right;
                     //change to case 4
                 }
                 if(node.isBlack && brother.isBlack
@@ -375,11 +384,12 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                         brother.left.isBlack = true;
                         brother.isBlack = false;
                         rotateRight(brother);
-                        continue;
+                        brother = node.parent.right;
                     }
                         //case 6: node is black, brother is black,brother right is red
                         brother.isBlack = node.parent.isBlack;
                         node.parent.isBlack = true;
+                        rotateLeft(node.parent);
                         if(brother.right != null){brother.right.isBlack = true;}
                         node = root;
                 }
@@ -387,9 +397,10 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                 brother = node.parent.left;
                 if(!brother.isBlack){
                     //Case 3:brother is red
-                    node.parent.isBlack = false;
                     brother.isBlack = true;
+                    node.parent.isBlack = false;
                     rotateRight(node.parent);
+                    brother = node.parent.left;
                     //change to case 4
                 }
                 if(node.isBlack && brother.isBlack
@@ -398,7 +409,6 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                     //case 4: node,brother, sons of brother are all black
                     brother.isBlack = false;
                     node = node.parent;
-                    continue;
 
                 }else{
                     //case 5: node is black, brother is black,brother left is red,right is black
@@ -408,24 +418,26 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                         brother.left.isBlack = true;
                         brother.isBlack = false;
                         rotateLeft(brother);
-                        continue;
-                    }else{
+                        brother = node.parent.left;
+                    }
                         //case 6: node is black, brother is black,brother right is red
                         brother.isBlack = node.parent.isBlack;
                         node.parent.isBlack = true;
+                        rotateRight(node.parent);
                         if(brother.left != null){brother.left.isBlack = true;}
                         node = root;
-                    }
                 }
             }
         }
-        if(node != null && node.parent == null){
-            root = node;
+//        if(node != null && node.parent == null){
+//            root = node;
+//        }
+        if(node != null){
             node.isBlack = true;
         }
     }
-    private  E max(RBNode current){
-        if (current.right == null){return  current.data;}
+    private  RBNode max(RBNode current){
+        if (current.right == null){return  current;}
         return max(current.right);
     }
 
