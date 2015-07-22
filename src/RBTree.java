@@ -329,12 +329,9 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             toFix = toDelete.left;
         }
         //don't care if leaf node
-        RBNode parentNode;
+        RBNode parentNode = toDelete.parent;
         if(toFix!= null){
             toFix.parent = toDelete.parent;
-            parentNode = toFix.parent;
-        }else{
-            parentNode = toDelete.parent;
         }
         if(toDelete.parent == null){
             root = toFix;
@@ -398,7 +395,6 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                     if(brother.right != null){brother.right.isBlack = true;}
                     rotateLeft(parentNode);
                     node = root;
-                    break;
                 }
             } else {
                 brother = parentNode.left;
@@ -418,7 +414,6 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                     }
                     node = parentNode;
                     parentNode = node.parent;
-
                 }else{
                     //case 5: node is black, brother is black,brother left is red,right is black
                     if((brother.left == null || brother.left.isBlack)){
@@ -433,7 +428,6 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                     if(brother.left != null){brother.left.isBlack = true;}
                     rotateRight(parentNode);
                     node = root;
-                    break;
                 }
             }
         }
@@ -578,8 +572,6 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
     public boolean getRoot() {
         return root.isBlack;
     }
-
-
 
     public void showInfo(RBNode toShow){
         System.out.println("Root: "+ toShow.data+" black: "+toShow.isBlack);
