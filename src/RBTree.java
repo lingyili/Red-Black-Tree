@@ -309,7 +309,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         count--;
         RBNode toDelete = find(item);
         removeHelper(toDelete);
-        return (toDelete != null);
+        return true;
     }
 
     private  RBNode removeHelper(RBNode toRemove){
@@ -370,28 +370,25 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                     brother = node.parent.right;
                     //change to case 4
                 }
-                if(node.isBlack && brother.isBlack
-                        && (brother.left == null || brother.left.isBlack)
+                if( (brother.left == null || brother.left.isBlack)
                         && (brother.right == null || brother.right.isBlack)){
                     //case 4: node,brother, sons of brother are all black
                     brother.isBlack = false;
                     node = node.parent;
                 }else{
                     //case 5: node is black, brother is black,brother left is red,right is black
-                    if(node.isBlack && brother.isBlack
-                            &&(brother.left != null && !brother.left.isBlack)
-                            && (brother.right == null || brother.left.isBlack)){
+                    if((brother.right == null || brother.right.isBlack)){
                         brother.left.isBlack = true;
                         brother.isBlack = false;
                         rotateRight(brother);
                         brother = node.parent.right;
                     }
                         //case 6: node is black, brother is black,brother right is red
-                        brother.isBlack = node.parent.isBlack;
-                        node.parent.isBlack = true;
-                        rotateLeft(node.parent);
-                        if(brother.right != null){brother.right.isBlack = true;}
-                        node = root;
+                    brother.isBlack = node.parent.isBlack;
+                    node.parent.isBlack = true;
+                    if(brother.right != null){brother.right.isBlack = true;}
+                    rotateLeft(node.parent);
+                    node = root;
                 }
             } else {
                 brother = node.parent.left;
@@ -403,8 +400,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                     brother = node.parent.left;
                     //change to case 4
                 }
-                if(node.isBlack && brother.isBlack
-                        && (brother.left == null || brother.left.isBlack)
+                if((brother.left == null || brother.left.isBlack)
                         && (brother.right == null || brother.right.isBlack)){
                     //case 4: node,brother, sons of brother are all black
                     brother.isBlack = false;
@@ -412,20 +408,18 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
 
                 }else{
                     //case 5: node is black, brother is black,brother left is red,right is black
-                    if(node.isBlack && brother.isBlack
-                            &&(brother.left != null && !brother.left.isBlack)
-                            && (brother.right == null || brother.left.isBlack)){
+                    if((brother.left != null && !brother.left.isBlack)){
                         brother.left.isBlack = true;
                         brother.isBlack = false;
                         rotateLeft(brother);
                         brother = node.parent.left;
                     }
-                        //case 6: node is black, brother is black,brother right is red
-                        brother.isBlack = node.parent.isBlack;
-                        node.parent.isBlack = true;
-                        rotateRight(node.parent);
-                        if(brother.left != null){brother.left.isBlack = true;}
-                        node = root;
+                    //case 6: node is black, brother is black,brother right is red
+                    brother.isBlack = node.parent.isBlack;
+                    node.parent.isBlack = true;
+                    rotateRight(node.parent);
+                    if(brother.left != null){brother.left.isBlack = true;}
+                    node = root;
                 }
             }
         }
