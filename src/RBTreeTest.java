@@ -17,7 +17,7 @@ public class RBTreeTest {
 
 	int[] firstLevelOrderRemove2 = {54,23,76,12,43,98,25,45};//remove 73,86
 	int[] firstLevelOrderRemove3 = {45,23,76,12,43,98,25};//remove 73,86,54(root)
-	int[] firstLevelOrderRemove4 = {45,23,76,23,43,98};//remove 73,86,54(root),12
+	int[] firstLevelOrderRemove4 = {45,25,76,23,43,98};//remove 73,86,54(root),12
 	@Before
 	public void setup() {
 		tree = new RBTree<Integer>();

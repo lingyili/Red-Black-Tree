@@ -39,11 +39,11 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             toReturn = add(toAdd, root);
         }
         if (toReturn) {
-            System.out.println(toAdd.data + " is added. its parent is: " + toAdd.parent.data);
+            //System.out.println(toAdd.data + " is added. its parent is: " + toAdd.parent.data);
             fixAdd(toAdd);
         }
         root.isBlack = true;
-        showInfo(root);
+        //showInfo(root);
         return toReturn;
     }
 
@@ -58,7 +58,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                 count++;
                 return true;
             } else {
-                System.out.println("toAdd is: " + toAdd.data + " subRoot.left is " + subRoot.left.data);
+                //System.out.println("toAdd is: " + toAdd.data + " subRoot.left is " + subRoot.left.data);
                 return add(toAdd, subRoot.left);
             }
         } else {
@@ -68,7 +68,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                 count++;
                 return true;
             } else {
-                System.out.println("toAdd is: " + toAdd.data + " subRoot.right is " + subRoot.right.data);
+                //System.out.println("toAdd is: " + toAdd.data + " subRoot.right is " + subRoot.right.data);
                 return add(toAdd, subRoot.right);
             }
         }
@@ -90,7 +90,7 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
                 //parent is left
                 uncle = gparent.right;
                 if (uncle != null) {
-                    System.out.println("uncle color is: " + uncle.isBlack);
+                    //System.out.println("uncle color is: " + uncle.isBlack);
                 }
                 //case 3 uncle is red
                 if (uncle != null && !uncle.isBlack) {
@@ -322,13 +322,19 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
             //two subtrees, we need successor
             toDelete = max(toRemove.left);
         }
-        if(toDelete.left != null){
-            toFix = toDelete.left;
-        } else {
+
+        if(toDelete.right != null){
             toFix = toDelete.right;
+        } else {
+            toFix = toDelete.left;
         }
+        //don't care if leaf node
+        RBNode parentNode;
         if(toFix!= null){
             toFix.parent = toDelete.parent;
+            parentNode = toFix.parent;
+        }else{
+            parentNode = toDelete.parent;
         }
         if(toDelete.parent == null){
             root = toFix;
@@ -341,11 +347,11 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         }
         //set the parent pointer
         if(toRemove != toDelete){
-            toRemove.isBlack = toDelete.isBlack;
+            //toRemove.isBlack = toDelete.isBlack;
             toRemove.data = toDelete.data;
         }
         if(toDelete.isBlack){
-            fixRemove(toFix);
+            fixRemove(toFix, parentNode);
         }
         return toDelete;
     }
@@ -356,70 +362,78 @@ public class RBTree <E extends Comparable> implements BSTree<E> {
         return min(current.left);
     }
 
-    private void fixRemove(RBNode node) {
+    private void fixRemove(RBNode node,RBNode parentNode) {
         RBNode brother;
-        while ((node != null && node.isBlack) && (node != root )) {
+        while ((node == null || node.isBlack) && (node != root )) {
             //Case 1,2 return
-            if(!selfIsRight(node)){
-                brother = node.parent.right;
+            if(parentNode.left == node){
+                brother = parentNode.right;
                 if(brother != null && !brother.isBlack){
                     //Case 3:brother is red
                     brother.isBlack = true;
-                    node.parent.isBlack = false;
-                    rotateLeft(node.parent);
-                    brother = node.parent.right;
+                    parentNode.isBlack = false;
+                    rotateLeft(parentNode);
+                    brother = parentNode.right;
                     //change to case 4
                 }
-                if( (brother.left == null || brother.left.isBlack)
+                if( brother == null ||(brother.left == null || brother.left.isBlack)
                         && (brother.right == null || brother.right.isBlack)){
                     //case 4: node,brother, sons of brother are all black
-                    brother.isBlack = false;
-                    node = node.parent;
+                    if(brother!=null){
+                        brother.isBlack = false;
+                    }
+                    node = parentNode;
+                    parentNode = node.parent;
                 }else{
                     //case 5: node is black, brother is black,brother left is red,right is black
                     if((brother.right == null || brother.right.isBlack)){
                         brother.left.isBlack = true;
                         brother.isBlack = false;
                         rotateRight(brother);
-                        brother = node.parent.right;
+                        brother = parentNode.right;
                     }
                         //case 6: node is black, brother is black,brother right is red
-                    brother.isBlack = node.parent.isBlack;
-                    node.parent.isBlack = true;
+                    brother.isBlack = parentNode.isBlack;
+                    parentNode.isBlack = true;
                     if(brother.right != null){brother.right.isBlack = true;}
-                    rotateLeft(node.parent);
+                    rotateLeft(parentNode);
                     node = root;
+                    break;
                 }
             } else {
-                brother = node.parent.left;
-                if(!brother.isBlack){
+                brother = parentNode.left;
+                if(brother != null &&!brother.isBlack){
                     //Case 3:brother is red
                     brother.isBlack = true;
-                    node.parent.isBlack = false;
-                    rotateRight(node.parent);
-                    brother = node.parent.left;
+                    parentNode.isBlack = false;
+                    rotateRight(parentNode);
+                    brother = parentNode.left;
                     //change to case 4
                 }
-                if((brother.left == null || brother.left.isBlack)
+                if(brother == null ||(brother.left == null || brother.left.isBlack)
                         && (brother.right == null || brother.right.isBlack)){
                     //case 4: node,brother, sons of brother are all black
-                    brother.isBlack = false;
-                    node = node.parent;
+                    if(brother!=null){
+                        brother.isBlack = false;
+                    }
+                    node = parentNode;
+                    parentNode = node.parent;
 
                 }else{
                     //case 5: node is black, brother is black,brother left is red,right is black
-                    if((brother.left != null && !brother.left.isBlack)){
-                        brother.left.isBlack = true;
+                    if((brother.left == null || brother.left.isBlack)){
+                        brother.right.isBlack = true;
                         brother.isBlack = false;
                         rotateLeft(brother);
-                        brother = node.parent.left;
+                        brother = parentNode.left;
                     }
                     //case 6: node is black, brother is black,brother right is red
-                    brother.isBlack = node.parent.isBlack;
-                    node.parent.isBlack = true;
-                    rotateRight(node.parent);
+                    brother.isBlack = parentNode.isBlack;
+                    parentNode.isBlack = true;
                     if(brother.left != null){brother.left.isBlack = true;}
+                    rotateRight(parentNode);
                     node = root;
+                    break;
                 }
             }
         }
